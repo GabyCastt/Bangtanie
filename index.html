@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>ARMY Galaxy ✦</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ── RESET & BASE ─────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --font-display: 'Cormorant Garamond', serif;
+  --font-body: 'DM Sans', sans-serif;
+  --salo:  #a855f7;
+  --salo-light: #e9d5ff;
+  --salo-bg: #130026;
+  --marjuri: #ec4899;
+  --marjuri-light: #fce7f3;
+  --marjuri-bg: #1a0010;
+  --victor: #22d3ee;
+  --victor-light: #cffafe;
+  --victor-bg: #001a22;
+}
+html, body { width: 100%; min-height: 100vh; overflow-x: hidden; background: #050010; }
+body { font-family: var(--font-body); color: #fff; }
+
+/* ── SCREENS ──────────────────────────────────── */
+.screen { display: none; width: 100%; min-height: 100vh; }
+.screen.active { display: flex; flex-direction: column; }
+
+/* ── STARS ────────────────────────────────────── */
+#starfield {
+  position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden;
+}
+.star {
+  position: absolute; border-radius: 50%; background: #fff;
+  animation: twinkle var(--dur, 3s) ease-in-out infinite var(--delay, 0s);
+}
+@keyframes twinkle {
+  0%,100% { opacity: .15; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.4); }
+}
+
+/* ── HOME ─────────────────────────────────────── */
+#home {
+  align-items: center; justify-content: center;
+  min-height: 100vh; position: relative; padding: 40px 20px;
+}
+.home-inner { position: relative; z-index: 2; width: 100%; max-width: 360px; }
+
+.home-eyebrow {
+  font-family: var(--font-body); font-size: 10px; font-weight: 500;
+  letter-spacing: 4px; text-transform: uppercase; color: rgba(255,255,255,.4);
+  text-align: center; margin-bottom: 10px;
+}
+.home-title {
+  font-family: var(--font-display); font-size: 52px; font-weight: 400; font-style: italic;
+  text-align: center; line-height: 1; color: #fff;
+  margin-bottom: 4px;
+}
+.home-title span { color: rgba(255,255,255,.25); }
+.home-sub {
+  font-family: var(--font-display); font-size: 15px; font-style: italic;
+  text-align: center; color: rgba(255,255,255,.4); margin-bottom: 52px;
+}
+
+.planets { display: flex; flex-direction: column; gap: 14px; }
+
+.planet-btn {
+  display: flex; align-items: center; gap: 18px;
+  background: rgba(255,255,255,.04); border: .5px solid rgba(255,255,255,.1);
+  border-radius: 20px; padding: 18px 20px; cursor: pointer;
+  transition: background .25s, border-color .25s, transform .2s;
+  text-align: left; width: 100%;
+}
+.planet-btn:hover { background: rgba(255,255,255,.09); border-color: rgba(255,255,255,.22); transform: translateY(-2px); }
+
+.planet-orb {
+  width: 54px; height: 54px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; font-size: 24px;
+  animation: float var(--dur, 5s) ease-in-out infinite;
+}
+@keyframes float {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-7px); }
+}
+.orb-salo    { background: radial-gradient(circle at 35% 30%, #d8b4fe, #9333ea, #3b0764); box-shadow: 0 0 24px 6px rgba(168,85,247,.4); --dur: 5s; }
+.orb-marjuri { background: radial-gradient(circle at 35% 30%, #fbcfe8, #db2777, #831843); box-shadow: 0 0 24px 6px rgba(236,72,153,.4); --dur: 6.5s; }
+.orb-victor  { background: radial-gradient(circle at 35% 30%, #a5f3fc, #0891b2, #0c4a6e); box-shadow: 0 0 24px 6px rgba(6,182,212,.35); --dur: 4.5s; }
+
+.planet-text { flex: 1; }
+.planet-name {
+  font-family: var(--font-display); font-size: 22px; font-weight: 500;
+  line-height: 1; margin-bottom: 5px;
+}
+.planet-detail { font-size: 11px; color: rgba(255,255,255,.45); line-height: 1.5; }
+
+.planet-arrow { font-size: 16px; opacity: .3; }
+
+/* ── PROFILE SCREEN ───────────────────────────── */
+.profile-screen { position: relative; min-height: 100vh; }
+.profile-bg {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-size: cover;
+}
+
+.profile-scroll { position: relative; z-index: 2; padding-bottom: 48px; }
+
+.top-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 20px 0;
+}
+.back-btn {
+  font-family: var(--font-body); font-size: 12px; letter-spacing: 2px;
+  text-transform: uppercase; color: rgba(255,255,255,.5);
+  background: none; border: .5px solid rgba(255,255,255,.15);
+  border-radius: 20px; padding: 8px 16px; cursor: pointer;
+  transition: color .2s, border-color .2s;
+}
+.back-btn:hover { color: #fff; border-color: rgba(255,255,255,.4); }
+
+/* audio toggle */
+.audio-toggle {
+  width: 36px; height: 36px; border-radius: 50%; border: .5px solid rgba(255,255,255,.15);
+  background: rgba(255,255,255,.06); display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 16px; transition: background .2s;
+}
+.audio-toggle:hover { background: rgba(255,255,255,.14); }
+
+/* hero */
+.profile-hero { text-align: center; padding: 32px 20px 24px; }
+.hero-orb {
+  width: 90px; height: 90px; border-radius: 50%; margin: 0 auto 18px;
+  display: flex; align-items: center; justify-content: center; font-size: 38px;
+  animation: float 5s ease-in-out infinite;
+}
+.hero-name {
+  font-family: var(--font-display); font-size: 42px; font-weight: 400; font-style: italic;
+  line-height: 1; margin-bottom: 6px;
+}
+.hero-event {
+  font-size: 13px; color: rgba(255,255,255,.55); margin-bottom: 14px;
+}
+.hero-bias {
+  display: inline-block; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase;
+  border: .5px solid; border-radius: 20px; padding: 5px 14px;
+  font-weight: 500;
+}
+
+/* music player */
+.music-player {
+  margin: 20px; border-radius: 16px; padding: 14px 18px;
+  background: rgba(255,255,255,.06); border: .5px solid rgba(255,255,255,.1);
+  display: flex; align-items: center; gap: 14px;
+}
+.music-disc {
+  width: 42px; height: 42px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; font-size: 18px;
+  background: rgba(255,255,255,.1);
+}
+.music-disc.spinning { animation: spin 4s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.music-info { flex: 1; min-width: 0; }
+.music-title { font-size: 13px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.music-sub { font-size: 11px; color: rgba(255,255,255,.4); margin-top: 2px; }
+.music-status { font-size: 11px; color: rgba(255,255,255,.3); }
+
+/* ── VICTOR UPLOAD ─────────────────────────────
+   Para que Victor pueda cargar su canción:
+   Simplemente reemplaza la línea de abajo con
+   un <audio> tag igual al de Salo/Marjuri.
+   O usa el botón de upload que está en esta sección.
+────────────────────────────────────────────── */
+.upload-area {
+  margin: 0 20px 20px; border-radius: 12px; padding: 14px 18px;
+  border: .5px dashed rgba(255,255,255,.2);
+  display: flex; align-items: center; gap: 12px;
+  background: rgba(255,255,255,.03);
+}
+.upload-label { font-size: 12px; color: rgba(255,255,255,.4); flex: 1; }
+.upload-btn-sm {
+  font-size: 11px; padding: 6px 12px; border-radius: 10px;
+  background: rgba(255,255,255,.1); border: .5px solid rgba(255,255,255,.2);
+  color: #fff; cursor: pointer;
+}
+
+/* ── PUZZLE SECTION ────────────────────────────── */
+.puzzles-section { padding: 0 20px; }
+.section-label {
+  font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+  color: rgba(255,255,255,.3); margin-bottom: 14px; font-weight: 500;
+}
+.puzzle-list { display: flex; flex-direction: column; gap: 10px; }
+
+.puzzle-card {
+  border-radius: 14px; border: .5px solid rgba(255,255,255,.1);
+  background: rgba(255,255,255,.04);
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 16px; cursor: pointer;
+  transition: background .2s, transform .15s;
+}
+.puzzle-card:hover { background: rgba(255,255,255,.09); transform: translateX(3px); }
+.puzzle-thumb {
+  width: 52px; height: 52px; border-radius: 10px; overflow: hidden; flex-shrink: 0;
+  background: rgba(255,255,255,.08);
+}
+.puzzle-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.puzzle-thumb-placeholder {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+}
+.puzzle-info { flex: 1; }
+.puzzle-name { font-size: 14px; font-weight: 500; margin-bottom: 3px; }
+.puzzle-hint { font-size: 11px; color: rgba(255,255,255,.35); }
+.puzzle-badge {
+  font-size: 11px; padding: 4px 10px; border-radius: 10px;
+  background: rgba(255,255,255,.08); color: rgba(255,255,255,.5); flex-shrink: 0;
+}
+.puzzle-badge.done { background: rgba(74,222,128,.15); color: #4ade80; }
+
+/* ── PUZZLE GAME ───────────────────────────────── */
+#puzzleGame {
+  position: fixed; inset: 0; z-index: 50;
+  display: none; flex-direction: column; align-items: center; justify-content: center;
+  padding: 24px 16px;
+  background: rgba(5,0,16,.97);
+}
+#puzzleGame.open { display: flex; }
+
+.game-title {
+  font-family: var(--font-display); font-size: 26px; font-style: italic;
+  margin-bottom: 4px; text-align: center;
+}
+.game-hint { font-size: 11px; color: rgba(255,255,255,.35); margin-bottom: 22px; letter-spacing: 1px; }
+
+.puzzle-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 4px; border-radius: 12px; overflow: hidden;
+  border: .5px solid rgba(255,255,255,.1);
+  margin-bottom: 22px;
+}
+.piece {
+  width: 104px; height: 104px; cursor: pointer;
+  background-size: 312px 312px; background-repeat: no-repeat;
+  transition: opacity .15s, box-shadow .15s;
+  position: relative;
+}
+.piece.selected { box-shadow: inset 0 0 0 3px #fff; opacity: .85; }
+.piece.placed   { box-shadow: inset 0 0 0 2px rgba(74,222,128,.5); }
+
+/* placeholder when no image loaded */
+.piece-placeholder {
+  width: 104px; height: 104px;
+  background: rgba(255,255,255,.07);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px; color: rgba(255,255,255,.2);
+}
+
+.game-actions { display: flex; gap: 10px; }
+.game-btn {
+  padding: 10px 22px; border-radius: 20px; font-size: 13px;
+  border: .5px solid rgba(255,255,255,.2); background: rgba(255,255,255,.07);
+  color: #fff; cursor: pointer; transition: background .2s; font-family: var(--font-body);
+}
+.game-btn:hover { background: rgba(255,255,255,.16); }
+
+/* ── WIN OVERLAY ───────────────────────────────── */
+#winOverlay {
+  position: fixed; inset: 0; z-index: 100;
+  display: none; flex-direction: column; align-items: center; justify-content: center;
+  padding: 36px 28px; text-align: center;
+  background: rgba(5,0,16,.95);
+}
+#winOverlay.show { display: flex; }
+.win-big {
+  font-size: 64px; margin-bottom: 18px;
+  animation: pop .4s cubic-bezier(.36,1.56,.64,1) both;
+}
+@keyframes pop {
+  from { transform: scale(0); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+.win-heading {
+  font-family: var(--font-display); font-size: 34px; font-style: italic;
+  margin-bottom: 14px; font-weight: 400;
+}
+.win-text {
+  font-size: 15px; color: rgba(255,255,255,.65); line-height: 1.7;
+  margin-bottom: 28px; max-width: 300px;
+}
+.win-close {
+  padding: 12px 32px; border-radius: 24px; font-size: 14px;
+  border: .5px solid rgba(255,255,255,.25); background: rgba(255,255,255,.1);
+  color: #fff; cursor: pointer; font-family: var(--font-body);
+  transition: background .2s;
+}
+.win-close:hover { background: rgba(255,255,255,.2); }
+
+/* ── FLOATING NOTES ────────────────────────────── */
+.float-note {
+  position: fixed; pointer-events: none; z-index: 1;
+  font-size: 14px; opacity: 0;
+  animation: riseNote 9s ease-in infinite;
+}
+@keyframes riseNote {
+  0%   { transform: translateY(0) rotate(-10deg); opacity: 0; }
+  10%  { opacity: .18; }
+  90%  { opacity: .08; }
+  100% { transform: translateY(-90vh) rotate(20deg); opacity: 0; }
+}
+</style>
+</head>
+<body>
+
+<!-- GLOBAL STARFIELD -->
+<div id="starfield"></div>
+
+<!-- ═══════════════════════════════════════
+     HOME — GALAXY
+════════════════════════════════════════ -->
+<div id="home" class="screen active">
+  <div class="home-inner">
+    <p class="home-eyebrow">para mis favoritas & favorito</p>
+    <h1 class="home-title">ARMY<br><span>Galaxy</span></h1>
+    <p class="home-sub">un universo hecho para ustedes</p>
+
+    <div class="planets">
+
+      <button class="planet-btn" onclick="openProfile('salo')">
+        <div class="planet-orb orb-salo" style="--dur:5s">💜</div>
+        <div class="planet-text">
+          <p class="planet-name" style="color:#d8b4fe">Salo</p>
+          <p class="planet-detail">🎂 Feliz Cumple!! · Hobi te ama <3 <br></p>
+        </div>
+        <span class="planet-arrow">→</span>
+      </button>
+
+      <button class="planet-btn" onclick="openProfile('marjuri')">
+        <div class="planet-orb orb-marjuri" style="--dur:6.5s">🩷</div>
+        <div class="planet-text">
+          <p class="planet-name" style="color:#fbcfe8">Marjuri</p>
+          <p class="planet-detail">🏥 Felicidades por ese internado!!! · Jimin te ama <3<br></p>
+        </div>
+        <span class="planet-arrow">→</span>
+      </button>
+
+      <button class="planet-btn" onclick="openProfile('victor')">
+        <div class="planet-orb orb-victor" style="--dur:4.5s">🩵</div>
+        <div class="planet-text">
+          <p class="planet-name" style="color:#a5f3fc">Víctor</p>
+          <p class="planet-detail">🎂 Feliz casi Cumple!! · Yoongi te ama <3 <br></p>
+        </div>
+        <span class="planet-arrow">→</span>
+      </button>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     SALO
+════════════════════════════════════════ -->
+<div id="screen-salo" class="screen profile-screen">
+  <div class="profile-bg" style="background: radial-gradient(ellipse at 40% 0%, #3b0764 0%, #050010 60%)"></div>
+
+  <!-- Audio de Salo — mikrokosmos.mp3 en carpeta /music/ -->
+  <audio id="audio-salo" src="music/mikrokosmos.mp3" loop preload="auto"></audio>
+
+  <div class="profile-scroll">
+    <div class="top-bar">
+      <button class="back-btn" onclick="goHome('salo')">← galaxia</button>
+      <button class="audio-toggle" id="toggle-salo" onclick="toggleAudio('salo')" title="música">🎵</button>
+    </div>
+
+    <div class="profile-hero">
+      <div class="hero-orb orb-salo">💜</div>
+      <h2 class="hero-name">Salomé</h2>
+      <p class="hero-event">✦ cumpleaños ✦</p>
+      <span class="hero-bias" style="color:var(--salo);border-color:rgba(168,85,247,.35)">bias · j-hope</span>
+    </div>
+
+    <div class="music-player">
+      <div class="music-disc" id="disc-salo">🎧</div>
+      <div class="music-info">
+        <p class="music-title">Mikrokosmos — BTS</p>
+        <p class="music-sub">presiona 🎵 para reproducir</p>
+      </div>
+      <span class="music-status" id="mstatus-salo">▶</span>
+    </div>
+
+    <div class="puzzles-section">
+      <p class="section-label">rompecabezas · hobi</p>
+      <div class="puzzle-list">
+        <!-- PUZZLE 1 — pon tu imagen en img/hobi/1.jpg -->
+        <div class="puzzle-card" onclick="openPuzzle('salo',0)">
+          <div class="puzzle-thumb">
+            <img src="img/hobi/hobi1.jpg" onerror="this.parentElement.innerHTML='<div class=puzzle-thumb-placeholder>☀️</div>'">
+          </div>
+          <div class="puzzle-info">
+            <p class="puzzle-name">Hobi — nivel 1</p>
+            <p class="puzzle-hint">el más fácil para empezar</p>
+          </div>
+          <span class="puzzle-badge" id="badge-salo-0">jugar</span>
+        </div>
+        <!-- PUZZLE 2 — pon tu imagen en img/hobi/2.jpg -->
+        <div class="puzzle-card" onclick="openPuzzle('salo',1)">
+          <div class="puzzle-thumb">
+            <img src="img/hobi/hobi2.jpg" onerror="this.parentElement.innerHTML='<div class=puzzle-thumb-placeholder>🌟</div>'">
+          </div>
+          <div class="puzzle-info">
+            <p class="puzzle-name">Hobi — nivel 2</p>
+            <p class="puzzle-hint">un poco más difícil</p>
+          </div>
+          <span class="puzzle-badge" id="badge-salo-1">jugar</span>
+        </div>
+        <!-- PUZZLE 3 — pon tu imagen en img/hobi/3.jpg -->
+        <div class="puzzle-card" onclick="openPuzzle('salo',2)">
+          <div class="puzzle-thumb">
+            <img src="img/hobi/hobi3.jpg" onerror="this.parentElement.innerHTML='<div class=puzzle-thumb-placeholder>💫</div>'">
+          </div>
+          <div class="puzzle-info">
+            <p class="puzzle-name">Hobi — nivel 3</p>
+            <p class="puzzle-hint">el desafío final 🔥</p>
+          </div>
+          <span class="puzzle-badge" id="badge-salo-2">jugar</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     MARJURI
+════════════════════════════════════════ -->
+<div id="screen-marjuri" class="screen profile-screen">
+  <div class="profile-bg" style="background: radial-gradient(ellipse at 60% 0%, #831843 0%, #050010 60%)"></div>
+
+  <!-- Audio de Marjuri — so_what.mp3 en carpeta /music/ -->
+  <audio id="audio-marjuri" src="music/so_what.mp3" loop preload="auto"></audio>
+
+  <div class="profile-scroll">
+    <div class="top-bar">
+      <button class="back-btn" onclick="goHome('marjuri')">← galaxia</button>
+      <button class="audio-toggle" id="toggle-marjuri" onclick="toggleAudio('marjuri')" title="música">🎵</button>
+    </div>
+
+    <div class="profile-hero">
+      <div class="hero-orb orb-marjuri">🩷</div>
+      <h2 class="hero-name">Marjuri</h2>
+      <p class="hero-event">✦ enfermera graduada ✦</p>
+      <span class="hero-bias" style="color:var(--marjuri);border-color:rgba(236,72,153,.35)">bias · jimin</span>
+    </div>
+
+    <div class="music-player">
+      <div class="music-disc" id="disc-marjuri">🎧</div>
+      <div class="music-info">
+        <p class="music-title">So What — BTS</p>
+        <p class="music-sub">presiona 🎵 para reproducir</p>
+      </div>
+      <span class="music-status" id="mstatus-marjuri">▶</span>
+    </div>
+
+    <div class="puzzles-section">
+      <p class="section-label">rompecabezas · jimin</p>
+      <div class="puzzle-list">
+        <!-- PUZZLE 1 — pon tu imagen en img/jimin/1.jpg -->
+        <div class="puzzle-card" onclick="openPuzzle('marjuri',0)">
+          <div class="puzzle-thumb">
+            <img src="img/jimin/jimin1.jpg" onerror="this.parentElement.innerHTML='<div class=puzzle-thumb-placeholder>🌸</div>'">
+          </div>
+          <div class="puzzle-info">
+            <p class="puzzle-name">Jimin — nivel 1</p>
+            <p class="puzzle-hint">el más fácil para empezar</p>
+          </div>
+          <span class="puzzle-badge" id="badge-marjuri-0">jugar</span>
+        </div>
+        <!-- PUZZLE 2 — pon tu imagen en img/jimin/2.jpg -->
+        <div class="puzzle-card" onclick="openPuzzle('marjuri',1)">
+          <div class="puzzle-thumb">
+            <img src="img/jimin/jimin2.jpg" onerror="this.parentElement.innerHTML='<div class=puzzle-thumb-placeholder>💗</div>'">
+          </div>
+          <div class="puzzle-info">
+            <p class="puzzle-name">Jimin — nivel 2</p>
+            <p class="puzzle-hint">un poco más difícil</p>
+          </div>
+          <span class="puzzle-badge" id="badge-marjuri-1">jugar</span>
+        </div>
+        <!-- PUZZLE 3 — pon tu imagen en img/jimin/3.jpg -->
+        <div class="puzzle-card" onclick="openPuzzle('marjuri',2)">
+          <div class="puzzle-thumb">
+            <img src="img/jimin/jimin3.jpg" onerror="this.parentElement.innerHTML='<div class=puzzle-thumb-placeholder>🩷</div>'">
+          </div>
+          <div class="puzzle-info">
+            <p class="puzzle-name">Jimin — nivel 3</p>
+            <p class="puzzle-hint">el desafío final 🔥</p>
+          </div>
+          <span class="puzzle-badge" id="badge-marjuri-2">jugar</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     VICTOR
+════════════════════════════════════════ -->
+<div id="screen-victor" class="screen profile-screen">
+  <div class="profile-bg" style="background: radial-gradient(ellipse at 50% 0%, #0c4a6e 0%, #050010 60%)"></div>
+
+  <!--
+  ══════════════════════════════════════════════════
+  MÚSICA DE VÍCTOR — CÓMO AGREGAR SU CANCIÓN:
+
+  Opción A) Tienes el archivo mp3:
+    1. Ponlo en la carpeta /music/ con el nombre victor.mp3
+    2. Descomenta la línea de abajo (quita los comentarios ✂)
+    3. Borra la sección "upload-area" que está debajo
+
+  ✂ <audio id="audio-victor" src="music/victor.mp3" loop preload="auto"></audio>
+
+  Opción B) Dejar que Victor cargue su canción desde el celular:
+    El botón de "cargar música" ya está en la pantalla, funciona solo.
+  ══════════════════════════════════════════════════
+  -->
+  <audio id="audio-victor" src="" loop preload="none"></audio>
+
+  <div class="profile-scroll">
+    <div class="top-bar">
+      <button class="back-btn" onclick="goHome('victor')">← galaxia</button>
+      <button class="audio-toggle" id="toggle-victor" onclick="toggleAudio('victor')" title="música">🎵</button>
+    </div>
+
+    <div class="profile-hero">
+      <div class="hero-orb orb-victor">🩵</div>
+      <h2 class="hero-name">Víctor</h2>
+      <p class="hero-event">✦ Feliz casi cumpleaños!! ✦</p>
+      <span class="hero-bias" style="color:var(--victor);border-color:rgba(6,182,212,.35)">bias · yoongi</span>
+    </div>
+
+    <div class="music-player">
+      <div class="music-disc" id="disc-victor">🎧</div>
+      <div class="music-info">
+        <p class="music-title" id="victor-song-title">canción favorita de Víctor</p>
+        <p class="music-sub">carga tu canción abajo</p>
+      </div>
+      <span class="music-status" id="mstatus-victor">▶</span>
+    </div>
+
+    <!-- ↓ Cuando agregues music/victor.mp3, puedes borrar este bloque ↓ -->
+    <div class="upload-area">
+      <span style="font-size:20px">🎵</span>
+      <span class="upload-label">cargar canción de Víctor (mp3)</span>
+      <label class="upload-btn-sm" style="cursor:pointer">
+        subir
+        <input type="file" accept="audio/mp3,audio/*" style="display:none" onchange="loadVictorSong(this)">
+      </label>
+    </div>
+    <!-- ↑ fin del bloque de upload ↑ -->
+
+    <div class="puzzles-section">
+      <p class="section-label">rompecabezas · yoongi</p>
+      <div class="puzzle-list">
+        <!-- PUZZLE 1 — pon tu imagen en img/yoongi/1.jpg -->
+        <div class="puzzle-card" onclick="openPuzzle('victor',0)">
+          <div class="puzzle-thumb">
+            <img src="img/yoongi/yoon1.jpg" onerror="this.parentElement.innerHTML='<div class=puzzle-thumb-placeholder>🐱</div>'">
+          </div>
+          <div class="puzzle-info">
+            <p class="puzzle-name">Yoongi — nivel 1</p>
+            <p class="puzzle-hint">el más fácil para empezar</p>
+          </div>
+          <span class="puzzle-badge" id="badge-victor-0">jugar</span>
+        </div>
+        <!-- PUZZLE 2 — pon tu imagen en img/yoongi/2.jpg -->
+        <div class="puzzle-card" onclick="openPuzzle('victor',1)">
+          <div class="puzzle-thumb">
+            <img src="img/yoongi/yoon2.jpg" onerror="this.parentElement.innerHTML='<div class=puzzle-thumb-placeholder>🎤</div>'">
+          </div>
+          <div class="puzzle-info">
+            <p class="puzzle-name">Yoongi — nivel 2</p>
+            <p class="puzzle-hint">un poco más difícil</p>
+          </div>
+          <span class="puzzle-badge" id="badge-victor-1">jugar</span>
+        </div>
+        <!-- PUZZLE 3 — pon tu imagen en img/yoongi/3.jpg -->
+        <div class="puzzle-card" onclick="openPuzzle('victor',2)">
+          <div class="puzzle-thumb">
+            <img src="img/yoongi/yoon3.jpg" onerror="this.parentElement.innerHTML='<div class=puzzle-thumb-placeholder>🩵</div>'">
+          </div>
+          <div class="puzzle-info">
+            <p class="puzzle-name">Yoongi — nivel 3</p>
+            <p class="puzzle-hint">el desafío final 🔥</p>
+          </div>
+          <span class="puzzle-badge" id="badge-victor-2">jugar</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     PUZZLE GAME OVERLAY
+════════════════════════════════════════ -->
+<div id="puzzleGame">
+  <p class="game-title" id="gameTitle">Rompecabezas</p>
+  <p class="game-hint">toca dos piezas para intercambiarlas</p>
+  <div class="puzzle-grid" id="puzzleGrid"></div>
+  <div class="game-actions">
+    <button class="game-btn" onclick="shuffleCurrent()">🔀 mezclar</button>
+    <button class="game-btn" onclick="closePuzzle()">✕ cerrar</button>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     WIN OVERLAY
+════════════════════════════════════════ -->
+<div id="winOverlay">
+  <div class="win-big" id="winEmoji">🎉</div>
+  <h3 class="win-heading" id="winHeading">¡lo armaste!</h3>
+  <p class="win-text" id="winText">mensaje</p>
+  <button class="win-close" onclick="closeWin()">continuar</button>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════════════ -->
+<script>
+/* ──────────────────────────────────────
+   MENSAJES DE FELICITACIÓN
+   Edita estos textos como quieras
+────────────────────────────────────── */
+const MESSAGES = {
+  salo: [
+    { emoji: '💜', heading: '¡feliz cumple, Salo!', text: 'Nivel 1 desbloqueado. Igual que siempre, imparable.' },
+    { emoji: '☀️', heading: '¡lo lograste!',        text: 'Dos de tres. Hobi approves.' },
+    { emoji: '🌟', heading: '¡completado!',          text: 'Los tres rompecabezas, los tres niveles. Feliz cumpleaños, Salo — que este año sea tan bueno como Hobi!!.' }
+  ],
+  marjuri: [
+    { emoji: '🩷', heading: '¡bien hecho!',          text: 'Nivel 1 listo. Enfermera y gamer.' },
+    { emoji: '🌸', heading: '¡dos de tres!',         text: 'Ya casi. Jimin estaría orgulloso.' },
+    { emoji: '🏥', heading: '¡completado!',          text: 'Felicidades por ese internado!!!!. Lo hiciste genial!!.' }
+  ],
+  victor: [
+    { emoji: '🩵', heading: '¡nivel 1 listo!',       text: 'Arrancamos bien. Yoongi mode: on.' },
+    { emoji: '🎤', heading: '¡dos de tres!',         text: 'Casi. Digno de un Suga B-side.' },
+    { emoji: '🐱', heading: '¡completado!',          text: 'Tres de tres. Feliz Casi-cumpleaños, Víctor — que el 29 de mayo sea un buen día.' }
+  ]
+};
+
+/* ──────────────────────────────────────
+   ESTRELLAS
+────────────────────────────────────── */
+(function() {
+  const sf = document.getElementById('starfield');
+  for (let i = 0; i < 80; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const sz = Math.random() * 2.2 + 0.4;
+    s.style.cssText = `width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--dur:${2+Math.random()*4}s;--delay:${Math.random()*5}s`;
+    sf.appendChild(s);
+  }
+})();
+
+/* ──────────────────────────────────────
+   NAVEGACIÓN
+────────────────────────────────────── */
+let currentProfile = null;
+
+function openProfile(p) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + p).classList.add('active');
+  currentProfile = p;
+  window.scrollTo(0, 0);
+  spawnNotes(p);
+}
+
+function goHome(p) {
+  stopAudio(p);
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('home').classList.add('active');
+  currentProfile = null;
+  clearNotes();
+  window.scrollTo(0, 0);
+}
+
+/* ──────────────────────────────────────
+   AUDIO
+────────────────────────────────────── */
+function toggleAudio(p) {
+  const audio = document.getElementById('audio-' + p);
+  const disc  = document.getElementById('disc-' + p);
+  const st    = document.getElementById('mstatus-' + p);
+  if (!audio.src || audio.src === window.location.href) return;
+  if (audio.paused) {
+    audio.play().then(() => {
+      disc.classList.add('spinning');
+      st.textContent = '⏸';
+    }).catch(() => {});
+  } else {
+    audio.pause();
+    disc.classList.remove('spinning');
+    st.textContent = '▶';
+  }
+}
+
+function stopAudio(p) {
+  const audio = document.getElementById('audio-' + p);
+  if (!audio) return;
+  audio.pause();
+  audio.currentTime = 0;
+  const disc = document.getElementById('disc-' + p);
+  if (disc) disc.classList.remove('spinning');
+  const st = document.getElementById('mstatus-' + p);
+  if (st) st.textContent = '▶';
+}
+
+/* Victor upload */
+function loadVictorSong(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const url = URL.createObjectURL(file);
+  const audio = document.getElementById('audio-victor');
+  audio.src = url;
+  document.getElementById('victor-song-title').textContent = file.name.replace(/\.[^.]+$/, '');
+}
+
+/* ──────────────────────────────────────
+   NOTAS FLOTANTES
+────────────────────────────────────── */
+const NOTE_SYMBOLS = {
+  salo:    ['♪','♫','💜','✦'],
+  marjuri: ['♪','♫','🩷','✦'],
+  victor:  ['♪','♫','🩵','✦']
+};
+let noteInterval = null;
+
+function spawnNotes(p) {
+  clearNotes();
+  const syms = NOTE_SYMBOLS[p];
+  noteInterval = setInterval(() => {
+    const n = document.createElement('div');
+    n.className = 'float-note';
+    n.textContent = syms[Math.floor(Math.random() * syms.length)];
+    n.style.cssText = `left:${5+Math.random()*88}%;bottom:-20px;animation-delay:${Math.random()*.5}s;animation-duration:${7+Math.random()*5}s`;
+    document.body.appendChild(n);
+    setTimeout(() => n.remove(), 13000);
+  }, 1800);
+}
+function clearNotes() {
+  clearInterval(noteInterval);
+  document.querySelectorAll('.float-note').forEach(n => n.remove());
+}
+
+/* ──────────────────────────────────────
+   PUZZLE GAME
+────────────────────────────────────── */
+const PIECE_SIZE = 104;
+const GRID_SIZE  = 3;
+const IMG_SIZE   = PIECE_SIZE * GRID_SIZE; // 312px
+
+const IMG_MAP = {
+  salo:    ['img/hobi/hobi1.jpg',   'img/hobi/hobi2.jpg',   'img/hobi/hobi3.jpg'],
+  marjuri: ['img/jimin/jimin1.jpg',  'img/jimin/jimin2.jpg',  'img/jimin/jimin3.jpg'],
+  victor:  ['img/yoongi/yoon1.jpg', 'img/yoongi/yoon2.jpg', 'img/yoongi/yoon3.jpg']
+};
+
+let state = {
+  profile: null, level: null,
+  order: [], selected: null, selEl: null,
+  completed: {}
+};
+
+function openPuzzle(profile, level) {
+  state.profile = profile;
+  state.level   = level;
+  state.selected = null;
+  state.selEl    = null;
+
+  const imgSrc = IMG_MAP[profile][level];
+  const n = GRID_SIZE * GRID_SIZE;
+  const correct = Array.from({length: n}, (_, i) => i);
+  state.order = shuffle([...correct]);
+
+  const title = {salo:'Hobi', marjuri:'Jimin', victor:'Yoongi'}[profile];
+  document.getElementById('gameTitle').textContent = `${title} — nivel ${level + 1}`;
+
+  renderGrid(imgSrc);
+  document.getElementById('puzzleGame').classList.add('open');
+}
+
+function renderGrid(imgSrc) {
+  const grid = document.getElementById('puzzleGrid');
+  grid.innerHTML = '';
+
+  // check if image loads
+  const testImg = new Image();
+  testImg.onload = () => buildPieces(grid, imgSrc, true);
+  testImg.onerror = () => buildPieces(grid, imgSrc, false);
+  testImg.src = imgSrc;
+}
+
+function buildPieces(grid, imgSrc, hasImg) {
+  state.order.forEach((val, pos) => {
+    const div = document.createElement('div');
+    if (hasImg) {
+      div.className = 'piece';
+      const col = val % GRID_SIZE;
+      const row = Math.floor(val / GRID_SIZE);
+      div.style.cssText = `background-image:url('${imgSrc}');background-size:${IMG_SIZE}px ${IMG_SIZE}px;background-position:-${col*PIECE_SIZE}px -${row*PIECE_SIZE}px;width:${PIECE_SIZE}px;height:${PIECE_SIZE}px`;
+    } else {
+      div.className = 'piece-placeholder';
+      div.textContent = val + 1;
+    }
+    div.dataset.pos = pos;
+    div.dataset.val = val;
+    div.onclick = () => onPieceClick(div, pos, imgSrc);
+    grid.appendChild(div);
+  });
+}
+
+function onPieceClick(el, pos, imgSrc) {
+  if (!state.selEl) {
+    state.selEl = el;
+    state.selected = pos;
+    el.classList.add('selected');
+    return;
+  }
+  if (state.selEl === el) {
+    el.classList.remove('selected');
+    state.selEl = null; state.selected = null;
+    return;
+  }
+
+  // swap values
+  const posA = parseInt(state.selEl.dataset.pos);
+  const posB = pos;
+  const valA = parseInt(state.selEl.dataset.val);
+  const valB = parseInt(el.dataset.val);
+
+  // swap in state.order
+  state.order[posA] = valB;
+  state.order[posB] = valA;
+
+  // swap visual background positions
+  if (state.selEl.classList.contains('piece') && el.classList.contains('piece')) {
+    const tmpBg = state.selEl.style.backgroundPosition;
+    state.selEl.style.backgroundPosition = el.style.backgroundPosition;
+    el.style.backgroundPosition = tmpBg;
+  } else {
+    const tmpTxt = state.selEl.textContent;
+    state.selEl.textContent = el.textContent;
+    el.textContent = tmpTxt;
+  }
+  state.selEl.dataset.val = valB;
+  el.dataset.val = valA;
+
+  state.selEl.classList.remove('selected');
+  state.selEl = null; state.selected = null;
+
+  checkSolved();
+}
+
+function checkSolved() {
+  const solved = state.order.every((v, i) => v === i);
+  if (solved) setTimeout(showWin, 350);
+}
+
+function showWin() {
+  const key  = `${state.profile}-${state.level}`;
+  const m    = MESSAGES[state.profile][state.level];
+  const badgeId = `badge-${state.profile}-${state.level}`;
+
+  state.completed[key] = true;
+  const badge = document.getElementById(badgeId);
+  if (badge) { badge.textContent = '✓'; badge.className = 'puzzle-badge done'; }
+
+  document.getElementById('winEmoji').textContent   = m.emoji;
+  document.getElementById('winHeading').textContent = m.heading;
+  document.getElementById('winText').textContent    = m.text;
+
+  document.getElementById('puzzleGame').classList.remove('open');
+  document.getElementById('winOverlay').classList.add('show');
+}
+
+function closeWin()    { document.getElementById('winOverlay').classList.remove('show'); }
+function closePuzzle() { document.getElementById('puzzleGame').classList.remove('open'); state.selEl = null; }
+
+function shuffleCurrent() {
+  if (state.profile === null) return;
+  state.order = shuffle(Array.from({length:9},(_,i)=>i));
+  state.selEl = null; state.selected = null;
+  renderGrid(IMG_MAP[state.profile][state.level]);
+}
+
+function shuffle(a) {
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+</script>
+</body>
+</html>
