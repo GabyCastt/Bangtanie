@@ -18,7 +18,7 @@
   --marjuri: #ec4899;
   --marjuri-light: #fce7f3;
   --marjuri-bg: #1a0010;
-  --victor: #22d3ee;
+  --victor: #00a8e8;
   --victor-light: #cffafe;
   --victor-bg: #001a22;
 }
@@ -87,7 +87,7 @@ body { font-family: var(--font-body); color: #fff; }
 }
 .orb-salo    { background: radial-gradient(circle at 35% 30%, #d8b4fe, #9333ea, #3b0764); box-shadow: 0 0 24px 6px rgba(168,85,247,.4); --dur: 5s; }
 .orb-marjuri { background: radial-gradient(circle at 35% 30%, #fbcfe8, #db2777, #831843); box-shadow: 0 0 24px 6px rgba(236,72,153,.4); --dur: 6.5s; }
-.orb-victor  { background: radial-gradient(circle at 35% 30%, #a5f3fc, #0891b2, #0c4a6e); box-shadow: 0 0 24px 6px rgba(6,182,212,.35); --dur: 4.5s; }
+.orb-victor  { background: radial-gradient(circle at 35% 30%, #90e0ef, #0077b6, #03045e); box-shadow: 0 0 24px 6px rgba(6,182,212,.35); --dur: 4.5s; }
 
 .planet-text { flex: 1; }
 .planet-name {
@@ -527,7 +527,7 @@ body { font-family: var(--font-body); color: #fff; }
     El botón de "cargar música" ya está en la pantalla, funciona solo.
   ══════════════════════════════════════════════════
   -->
-  <audio id="audio-victor" src="" loop preload="none"></audio>
+  <audio id="audio-victor" src="music/Louder_than_bombs.mp3" loop preload="none"></audio>
 
   <div class="profile-scroll">
     <div class="top-bar">
@@ -545,21 +545,21 @@ body { font-family: var(--font-body); color: #fff; }
     <div class="music-player">
       <div class="music-disc" id="disc-victor">🎧</div>
       <div class="music-info">
-        <p class="music-title" id="victor-song-title">canción favorita de Víctor</p>
-        <p class="music-sub">carga tu canción abajo</p>
+        <p class="music-title" id="victor-song-title">Louder than bombs — BTS</p>
+        <p class="music-sub">presiona 🎵 para reproducir</p>
       </div>
       <span class="music-status" id="mstatus-victor">▶</span>
     </div>
 
     <!-- ↓ Cuando agregues music/victor.mp3, puedes borrar este bloque ↓ -->
-    <div class="upload-area">
+    <!-- <div class="upload-area">
       <span style="font-size:20px">🎵</span>
       <span class="upload-label">cargar canción de Víctor (mp3)</span>
       <label class="upload-btn-sm" style="cursor:pointer">
         subir
         <input type="file" accept="audio/mp3,audio/*" style="display:none" onchange="loadVictorSong(this)">
       </label>
-    </div>
+    </div> -->
     <!-- ↑ fin del bloque de upload ↑ -->
 
     <div class="puzzles-section">
